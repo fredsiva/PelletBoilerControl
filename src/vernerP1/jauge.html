@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript">
+			google.charts.load('current', {'packages':['gauge']});
+			google.charts.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+			
+			var data = google.visualization.arrayToDataTable([
+				['Label', 'Value'],
+				['Memory', 80],
+			]);
+			
+			var options = {
+				width: 800, height: 240,
+				min:0, max:120,
+				greenFrom:50, greenTo:85,
+				redFrom: 90, redTo: 120,
+				yellowFrom:85, yellowTo: 90,
+				minorTicks: 3
+				};
+			
+			var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+			
+			chart.draw(data, options);
+			
+			setInterval(function() {
+				data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
+				chart.draw(data, options);
+				}, 13000);
+			
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="chart_div" style="width: 800px; height: 240px;"></div>
+	</body>
+</html>

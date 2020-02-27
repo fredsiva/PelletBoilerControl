@@ -1,0 +1,64 @@
+<html>
+<head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+google.charts.load('current', {'packages':['corechart']});
+function showChart(id,obj,dataname,datatype,start,end){
+    $.ajax({
+        type: "POST",
+        url: path_to+"ajax.php",
+        data: {  
+            's': start,
+            'e': end,
+            'title': id,
+            'p': datatype,
+            'f': 'crt'
+        },
+        dataType: "json",
+        success: function(data){
+            if(Object.keys(data).length){
+                var chda = new google.visualization.DataTable();
+                chda.addColumn('datetime', 'Время');
+                chda.addColumn('number', dataname);
+                for(i in data) chda.addRow([new Date(data[i]['date']+' '+data[i]['datetime']),parseInt(data[i][datatype])]);
+
+                var options = {
+                    title: obj+': '+dataname,
+                    vAxis: {minValue: 0},
+                    backgroundColor: '#123',
+                    areaOpacity: 0.5,
+                    theme: 'maximized',
+                    hAxis: {
+                        viewWindowMode: 'explicit',
+                        title: '',  
+                        titleTextStyle: {color: '#333'},
+                        gridlines: {
+                            count: -1,
+                            units: {
+                                days: {format: ['MMM dd']},
+                                hours: {format: ['HH:mm', 'ha']},
+                            }
+                        },
+                        minorGridlines: {
+                            units: {
+                                hours: {format: ['HH:mm', 'ha']},
+                                minutes: {format: ['HH:mm a Z', ':mm']}
+                            }
+                        }
+                    }
+                };
+
+                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                chart.draw(chda, options);
+            }
+        }
+    });
+}
+
+</script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 800px; height: 240px;"></div>
+  </body>
+</html>
