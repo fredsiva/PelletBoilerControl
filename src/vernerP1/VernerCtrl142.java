@@ -1348,8 +1348,8 @@ public class VernerCtrl142 {
         	
         	theWeatherApp = new OpenWeatherApp(this);
         	
-        	startOperationsHour = 5;	// 6:00 AM
-        	stopOperationsHour = 21;	// 22:00 PM
+        	startOperationsHour = 5;
+        	stopOperationsHour = 23;
 
         } catch (Exception e) {
         	System.err.println("Error Initializing(): " + e);
@@ -1738,9 +1738,8 @@ public class VernerCtrl142 {
 	 
 	 public boolean timeToStartFire() {
 	
-		 return true;	// Trust Netatmo to trigger the start of the Boiler.
+		 // return true;	// Trust Netatmo to trigger the start of the Boiler.
 		 
-		 /*
 		int nowI = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
 		if (nowI < startOperationsHour || nowI >= stopOperationsHour) {
@@ -1758,8 +1757,8 @@ public class VernerCtrl142 {
 			}
 			lastFiringDecision = true;
 		}
+
 		return lastFiringDecision;
-		*/
 		 
 	}
 	
