@@ -1584,7 +1584,7 @@ public class VernerCtrl142 {
 				if (theAlarmMonitor.newAlarmingSituation() == false) {	// Keep HPump on in case of Alarm
 					if (this.theHeatingPump.isOn() == true) {
 	
-						this.theHeatingPump.stop();
+						this.theHeatingPump.stop(); // test
 						logWithoutDetails("Turn Heating Pump Off", 3);
 					}
 				}
