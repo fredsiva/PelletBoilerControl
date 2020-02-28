@@ -19,6 +19,15 @@ import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.utility.Delay;
 
+/*
+ * WORKFLOW to work with Git:
+ *    1. 	Create branch in Web-Interface (Or in Eclipse?)
+ *    2.	Update one or more source files in Eclipse  (Will remain local)
+ *    3.	Compile, Test
+ *    4.	If changes are all ok, then merge back into Master (Commit, then create Pull Request, then approve Pull Request)
+ *    5.	Sync Eclipse so that it gets back to Master view
+ */
+
 /* TODOs
  *  TODO: detect that date is not in 2017, which can happen if EV3 was fully reset and not well connected to Network.  
  *  	Can cause issues when comparing today() to lastTime if NTP syncs in between...
@@ -256,6 +265,7 @@ public class VernerCtrl142 {
 					"]d "	+ theConveyor.getTimeS() +"s " +
 					"[" + 	(isIgnitorOn() ? "I" : "") +
 							(getWPump().isOn() ? "W" : "") + 
+							(getHeatingPump().isOn() ? "H" : "") + 
 							(getFan().isOn() ? "F" +getFan().getSpeed() : "") + 
 					"] "+
 					"T" + 	getThermostatStatus());
@@ -273,7 +283,7 @@ public class VernerCtrl142 {
 							"Feed " + theConveyor.getTimeS()+ "<br/>" +
 							(isIgnitorOn() ? "@ " : "") +
 								(getWPump().isOn() ? "Wp " : "") + 
-								(getHeatingPump().isOn() ? "Ci " : "") + 
+								(getHeatingPump().isOn() ? "Hp " : "") + 
 								(getFan().isOn() ? "F" +getFan().getSpeed()+ "%" : "")
 							+ "</h1>" );
 
@@ -314,8 +324,8 @@ public class VernerCtrl142 {
 						.append("<td>" + theConveyor.getTimeS()+ "</td></tr>")
 						.append("<tr><td>Ignitor</td>")
 						.append("<td>" + isIgnitorOn()+ "</td></tr>")
-						.append("<tr><td>WaterPump</td>")
-						.append("<td>" + getWPump().isOn()+ "</td></tr>")
+						.append("<tr><td>WaterPump & HeatingPump</td>")
+						.append("<td>" + getWPump().isOn()+ " , " + getHeatingPump().isOn() +  "</td></tr>")
 						.append("<tr><td>Fan</td>")
 						.append("<td>" + getFan().isOn()+ " @ " + getFan().getSpeed() + "%</td></tr>")
 						.append("<tr><td>Thermostat NetAtmo</td>")
@@ -1348,7 +1358,7 @@ public class VernerCtrl142 {
         	
         	theWeatherApp = new OpenWeatherApp(this);
         	
-        	startOperationsHour = 5;	// 5 AM
+        	startOperationsHour = 5;	// 5 AM to start
         	stopOperationsHour = 23;	// 23 PM
 
         } catch (Exception e) {
@@ -1565,21 +1575,21 @@ public class VernerCtrl142 {
 
 			newThermostatValue = sondeThermostatNetatmo.getValue();
 
-			if (thermostatStatus != newThermostatValue) {
-				thermostatStatus = newThermostatValue;
-				
-				if (newThermostatValue == 1) {
+			if (newThermostatValue == 1) { 		// NetAtmo Thermostat is off
+				if (this.theHeatingPump.isOn() == false) {
 					this.theHeatingPump.start();
 					logWithoutDetails("Turn Heating Pump On", 3);
 				}
-				else {
-					if (theAlarmMonitor.newAlarmingSituation() == false) {	// Keep HPump on in case of Alarm
+			} else {							// NetAtmo Thermostat is off
+				if (theAlarmMonitor.newAlarmingSituation() == false) {	// Keep HPump on in case of Alarm
+					if (this.theHeatingPump.isOn() == true) {
+	
 						this.theHeatingPump.stop();
 						logWithoutDetails("Turn Heating Pump Off", 3);
 					}
 				}
-					
 			}
+				
 			
 			/*  Dummy Temps			
 				boilerTemp = (int) 20;
