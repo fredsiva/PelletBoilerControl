@@ -1575,12 +1575,12 @@ public class VernerCtrl142 {
 
 			newThermostatValue = sondeThermostatNetatmo.getValue();
 
-			if (newThermostatValue == 1) { 		// NetAtmo Thermostat is off
+			if (newThermostatValue == 1) { 			// NetAtmo Thermostat is off
 				if (this.theHeatingPump.isOn() == false) {
 					this.theHeatingPump.start();
 					logWithoutDetails("Turn Heating Pump On", 3);
 				}
-			} else {							// NetAtmo Thermostat is off
+			} else {								// NetAtmo Thermostat is off
 				if (theAlarmMonitor.newAlarmingSituation() == false) {	// Keep HPump on in case of Alarm
 					if (this.theHeatingPump.isOn() == true) {
 	
