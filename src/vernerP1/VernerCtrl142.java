@@ -1348,8 +1348,8 @@ public class VernerCtrl142 {
         	
         	theWeatherApp = new OpenWeatherApp(this);
         	
-        	startOperationsHour = 5;
-        	stopOperationsHour = 23;
+        	startOperationsHour = 5;	// 5 AM
+        	stopOperationsHour = 23;	// 23 PM
 
         } catch (Exception e) {
         	System.err.println("Error Initializing(): " + e);
