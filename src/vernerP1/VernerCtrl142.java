@@ -1573,14 +1573,14 @@ public class VernerCtrl142 {
 			tempDeg = sondeTempRoom.getCalibratedTemp();
 			roomTemp = (int) tempDeg;
 
-			newThermostatValue = sondeThermostatNetatmo.getValue();
+			thermostatStatus = sondeThermostatNetatmo.getValue();
 
-			if (newThermostatValue == 1) { 			// NetAtmo Thermostat is off
+			if (thermostatStatus == 1) { 			// NetAtmo Thermostat is off
 				if (this.theHeatingPump.isOn() == false) {
 					this.theHeatingPump.start();
 					logWithoutDetails("Turn Heating Pump On", 3);
 				}
-			} else {								// NetAtmo Thermostat is off
+			} else if (thermostatStatus == 0 ) {								// NetAtmo Thermostat is off
 				if (theAlarmMonitor.newAlarmingSituation() == false) {	// Keep HPump on in case of Alarm
 					if (this.theHeatingPump.isOn() == true) {
 	
@@ -1588,9 +1588,10 @@ public class VernerCtrl142 {
 						logWithoutDetails("Turn Heating Pump Off", 3);
 					}
 				}
+			} else {
+				logWithoutDetails("Invalid Thermostat status returned (by Arduino?): " + thermostatStatus, 3);
 			}
 				
-			
 			/*  Dummy Temps			
 				boilerTemp = (int) 20;
 				chemineeTemp = (int) 20;
